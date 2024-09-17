@@ -124,7 +124,14 @@ export default {
     const sourceRequest = new Request(sourceUrl, request);
     const sourceResponse = await fetch(sourceRequest);
 
-    return sourceResponse;
+    // Create a new response without the "X-Robots-Tag" header
+    const modifiedHeaders = new Headers(sourceResponse.headers);
+    modifiedHeaders.delete('X-Robots-Tag');
+
+    return new Response(sourceResponse.body, {
+      status: sourceResponse.status,
+      headers: modifiedHeaders,
+    });
   }
 };
 
